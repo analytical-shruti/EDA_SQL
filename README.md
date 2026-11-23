@@ -1,162 +1,248 @@
-# EDA_SQL
-A structured Exploratory Data Analysis in MySQL on a sales data warehouse (gold schema): 60K+ sales rows, 295 products and 18,484 customers. The analysis explores business dimensions, date ranges and transactional metrics, calculates key KPIs, and ranks the best and worst products, subcategories, customers and countries.
 
-# 🔍 SQL Exploratory Data Analysis (EDA)
+<div align="center">
 
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
-![Skills](https://img.shields.io/badge/Skills-EDA%20%7C%20KPIs%20%7C%20Window%20Functions-blue)
-![Domain](https://img.shields.io/badge/Domain-Sales%20Analytics-green)
-![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
+# 📊 SQL Exploratory Data Analysis | Sales Performance
 
-A structured **Exploratory Data Analysis in MySQL** on a sales data warehouse (`gold` schema): **60K+ sales rows, 295 products and 18,484 customers**. The analysis explores business dimensions, date ranges and transactional metrics, calculates key KPIs, and ranks the best and worst products, subcategories, customers and countries.
+### Turning 60K+ Sales Records into Actionable Business Insights Using MySQL
 
-![KPI Cards](images/00_kpi_cards.png)
+![MySQL](https://img.shields.io/badge/MySQL-Advanced-blue?style=for-the-badge&logo=mysql)
+![SQL](https://img.shields.io/badge/SQL-Data%20Analysis-orange?style=for-the-badge)
+![EDA](https://img.shields.io/badge/Project-EDA-success?style=for-the-badge)
 
----
+**An end-to-end SQL project focused on exploring sales data, identifying business trends, measuring performance, and discovering actionable insights.**
 
-## 📌 Project Highlights
-
-- Conducted EDA on **60K+ sales records** across **295 products** and **18,484 customers**, examining business dimensions, date ranges and transactional metrics to understand sales patterns.
-- Calculated key business KPIs: **total sales of $29.36M**, **60,423 units sold** and **27,659 distinct orders**.
-- Ranked top-performing products and customers; the **top 5 products generated a combined $6.67M** (all from the Mountain-200 bike line).
+</div>
 
 ---
 
-## 🗂️ Dataset
+## 🚀 Project Overview
 
-| Table | Type | Rows | Description |
-|---|---|---|---|
-| `gold.fact_sales` | Fact | 60,398 | Order lines: order number, dates, sales amount, quantity, price |
-| `gold.dim_customers` | Dimension | 18,484 | Customer details: name, country, gender, birthdate |
-| `gold.dim_products` | Dimension | 295 | Product details: category, subcategory, cost |
+What drives revenue? Which products generate the highest sales? Which customers contribute the most? And where are the biggest business opportunities?
 
-**Data quality checks:** 0 duplicate customer or product keys and 0 unmatched foreign keys in `fact_sales`. NULLs found: 337 customers without a country, 15 without gender, 7 products without a category, 19 sales rows without an order date.
+In this project, I performed Exploratory Data Analysis (EDA) using **MySQL** to answer these questions.
+
+Working with a sales database containing more than 60K records, I explored customer behaviour, product performance, revenue distribution, geographical trends, and data quality.
+
+The objective was not just to write SQL queries, but to transform raw data into meaningful business insights that can support better decision-making.
+
+## 📊 Project Highlights
+
+| KPI | Business Result |
+|---|---:|
+| 💰 Total Revenue | **$29.36M** |
+| 📦 Total Quantity Sold | **60,423** |
+| 🛒 Unique Orders | **27,659** |
+| 👥 Total Customers | **18,484** |
+| 🏷️ Total Products | **295** |
+| 📈 Sales Records | **60,398** |
+
+## 💡 Key Business Insights
+
+### 1. Bikes Dominate Revenue
+
+- Bikes generated approximately **$28.32M** in revenue.
+- They contribute approximately **96.46% of total revenue**.
+- Only 97 bike products account for the majority of business revenue.
+
+**Business Impact:** The company should closely monitor bike inventory, pricing, and product availability because this category is the primary revenue driver.
+
+### 2. Top 5 Products Generate Significant Revenue
+
+- The top 5 products generated approximately **$6.67M**.
+- These products belong to the Mountain-200 product line.
+
+**Business Impact:** Identifying high-revenue products can help prioritize inventory planning and product marketing.
+
+### 3. United States and Australia Lead Sales
+
+| Country | Revenue |
+|---|---:|
+| United States | ~$9.16M |
+| Australia | ~$9.06M |
+| United Kingdom | ~$3.39M |
+
+**Business Impact:** These markets represent important opportunities for targeted marketing and regional sales strategies.
+
+### 4. High Sales Volume Does Not Always Mean High Revenue
+
+Accessories such as water bottles, tire tubes, and patch kits generate high sales quantities, while premium bikes contribute significantly more revenue.
+
+**Business Impact:** Businesses should evaluate both quantity sold and revenue generated instead of relying on sales volume alone.
+
+### 5. Customer Retention Opportunity
+
+- 18,484 customers placed orders.
+- 11,619 customers placed exactly one order.
+
+**Business Impact:** Customer retention campaigns, loyalty programs, and repeat-purchase strategies could be explored to improve customer lifetime value.
+
+---
+
+## 📈 Visual Business Insights
+
+### Revenue Contribution by Category
 
 ```mermaid
-erDiagram
-    DIM_CUSTOMERS ||--o{ FACT_SALES : "customer_key"
-    DIM_PRODUCTS  ||--o{ FACT_SALES : "product_key"
+pie showData
+    title Revenue Distribution
+    "Bikes" : 96.46
+    "Other Categories" : 3.54
 ```
 
-## 🔄 EDA Workflow
+### Sales Performance by Country
 
 ```mermaid
-flowchart LR
-    A[Database Exploration] --> B[Dimensions Exploration]
-    B --> C[Date Exploration]
-    C --> D[Measures / KPIs]
-    D --> E[Magnitude Analysis]
-    E --> F[Ranking Analysis]
-    F --> G[Ranking with Window Functions]
+xychart-beta
+    title "Revenue by Country ($ Millions)"
+    x-axis ["USA", "Australia", "UK"]
+    y-axis "Revenue" 0 --> 10
+    bar [9.16, 9.06, 3.39]
 ```
 
 ---
 
-## 1️⃣ Database Exploration
-Used `INFORMATION_SCHEMA.TABLES` and `INFORMATION_SCHEMA.COLUMNS` to list every table, view and column (with data types and nullability) before writing any analysis.
+## 🔍 Analysis Performed
 
-## 2️⃣ Dimensions Exploration
-Identified the customer countries (US, Australia, UK, France, Germany, Canada), product categories (Bikes, Components, Clothing, Accessories) and the full category → subcategory → product hierarchy.
+This project covers multiple dimensions of exploratory analysis.
 
-## 3️⃣ Date Exploration
-- **Order history:** 2010-12-29 to 2014-01-28 (3+ years, 36 full months)
-- **Customer birthdates:** 1916-02-10 (oldest) to 1986-06-25 (youngest)
-
-![Monthly Sales](images/10_monthly_sales.png)
-
-## 4️⃣ Measures Exploration (KPIs)
-A single consolidated KPI report built with `UNION ALL`:
-
-| Measure | Value |
+| Analysis Area | What I Investigated |
 |---|---|
-| Total Sales | 29,356,250 |
-| Total Quantity | 60,423 |
-| Average Price | ~486.04 |
-| Order Lines | 60,398 |
-| Unique Orders | 27,659 |
-| Total Products | 295 |
-| Total Customers | 18,484 |
-| Customers Who Ordered | 18,484 |
+| Database Exploration | Tables, columns, schema and metadata |
+| Data Quality | NULL values, duplicates and unmatched keys |
+| Measures Exploration | Revenue, quantity, orders and average price |
+| Magnitude Analysis | Performance by country, category and customer |
+| Ranking Analysis | Top-performing products and customers |
+| Time Analysis | Sales dates and historical trends |
+| Customer Analysis | Customer distribution and purchasing behaviour |
+| Product Analysis | Revenue and quantity by product |
+
+## 🛠️ Technical Skills Demonstrated
+
+- MySQL
+- SQL Joins
+- Aggregate Functions
+- Common Table Expressions (CTEs)
+- Subqueries
+- UNION ALL
+- Window Functions
+- ROW_NUMBER()
+- RANK()
+- DENSE_RANK()
+- PARTITION BY
+- GROUP BY and ORDER BY
+- CASE WHEN
+- Data Quality Checks
+- Business KPI Analysis
+
+### Example: Product Revenue Ranking Using Window Functions
 
 ```sql
-SELECT 'Total Sales' AS measure_name, SUM(sales_amount) AS measure_value FROM gold.fact_sales
-UNION ALL
-SELECT 'Unique Orders', COUNT(DISTINCT order_number) FROM gold.fact_sales
-UNION ALL
-SELECT 'Total Customers', COUNT(customer_key) FROM gold.dim_customers;
--- ... (full query in the .sql file)
-```
+SELECT
+    p.product_name,
+    SUM(f.sales_amount) AS total_revenue,
 
-## 5️⃣ Magnitude Analysis
-Measures aggregated by a dimension: customers, products, cost and revenue.
+    ROW_NUMBER() OVER (
+        ORDER BY SUM(f.sales_amount) DESC
+    ) AS row_num,
 
-![Customers by Country and Gender](images/01_customers_country_gender.png)
+    RANK() OVER (
+        ORDER BY SUM(f.sales_amount) DESC
+    ) AS product_rank,
 
-![Products by Category and Cost](images/02_products_category_cost.png)
+    DENSE_RANK() OVER (
+        ORDER BY SUM(f.sales_amount) DESC
+    ) AS dense_rank
 
-![Revenue by Category and Country](images/03_revenue_category_country.png)
-
-**Insight:** Bikes are only 97 of 295 products but generate **$28.32M of revenue (96.46%)**. The United States and Australia together account for over 60% of sales.
-
-## 6️⃣ Ranking Analysis
-
-### Products
-![Top and Bottom Products](images/04_top_bottom_products.png)
-
-### Subcategories
-![Top and Bottom Subcategories](images/05_top_bottom_subcategories.png)
-
-### Customers
-![Top Customers](images/07_top_customers.png)
-
-## 7️⃣ Ranking Exploration (Window Functions)
-
-`ROW_NUMBER()`, `RANK()` and `DENSE_RANK()` on product revenue. Ties show the difference between the three functions:
-
-![Ranking Functions](images/09_ranking_functions.png)
-
-```sql
-SELECT p.product_name,
-       SUM(f.sales_amount) AS total_revenue,
-       ROW_NUMBER() OVER (ORDER BY SUM(f.sales_amount) DESC) AS row_num,
-       RANK()       OVER (ORDER BY SUM(f.sales_amount) DESC) AS product_rank,
-       DENSE_RANK() OVER (ORDER BY SUM(f.sales_amount) DESC) AS product_dense_rank
 FROM gold.fact_sales f
-LEFT JOIN gold.dim_products p ON f.product_key = p.product_key
+
+LEFT JOIN gold.dim_products p
+    ON f.product_key = p.product_key
+
 GROUP BY p.product_name
 ORDER BY total_revenue DESC;
 ```
 
-**More rankings:** top and bottom 10 products by quantity, and the top 3 products in every category using `ROW_NUMBER() OVER (PARTITION BY category ...)`.
+This query demonstrates how SQL window functions can rank products based on revenue and help identify top-performing products.
 
-![Quantity Rankings](images/06_top_bottom_quantity.png)
+## 🗃️ Dataset Overview
 
-![Top 3 per Category](images/08_top3_per_category.png)
+The project uses three tables from the Gold Layer:
 
----
+| Table | Records | Description |
+|---|---:|---|
+| gold.fact_sales | 60,398 | Sales transactions |
+| gold.dim_customers | 18,484 | Customer information |
+| gold.dim_products | 295 | Product information |
 
-## 💡 Key Insights
+### Data Quality Findings
 
-- **Bikes dominate revenue:** the top 5 products are all Mountain-200 bikes ($6.67M combined).
-- **Low-priced accessories sell in volume:** the water bottle, patch kit and tire tubes lead by units, but contribute little revenue.
-- **Two markets lead:** the US ($9.16M) and Australia ($9.06M) are well ahead of the UK ($3.39M).
-- **Most customers are one-time buyers:** 11,619 of 18,484 customers placed exactly one order.
+| Validation | Result |
+|---|---:|
+| Duplicate Customer Keys | 0 |
+| Duplicate Product Keys | 0 |
+| Unmatched Foreign Keys | 0 |
+| Missing Customer Country | 337 |
+| Missing Customer Gender | 15 |
+| Missing Product Category | 7 |
+| Missing Order Dates | 19 |
 
-## 🛠️ Tech Stack
+These checks help identify potential reporting limitations and improve confidence in analytical results.
 
-MySQL 8.0 · CTEs · Window Functions (`ROW_NUMBER`, `RANK`, `DENSE_RANK`) · Joins · Aggregations · `UNION ALL` · `INFORMATION_SCHEMA`
+## 📂 Repository Structure
 
-## 📁 Repository Structure
-
-```
-SQL-EDA/
-├── SQL_EDA.sql          # All EDA queries (Q1 to Q41)
-├── dataset/             # gold_dim_customers.csv, gold_dim_products.csv, gold_fact_sales.csv
-├── images/              # Charts used in this README
+```text
+EDA_SQL/
+│
+├── SQL_EDA.sql
+├── gold.dim_customers.csv
+├── gold.dim_products.csv
+├── gold.fact_sales.csv
 └── README.md
 ```
 
+## ⚙️ How to Run This Project
 
-## 📬 Contact
+1. Clone this repository.
+2. Import the CSV datasets into MySQL.
+3. Create and populate the required Gold Layer tables.
+4. Open `SQL_EDA.sql` in MySQL Workbench.
+5. Execute the queries to explore the analysis.
 
-**Your Name** · [LinkedIn](https://www.linkedin.com/in/shrutikumbhare12/)
+**Main SQL File:** [SQL_EDA.sql](./SQL_EDA.sql)
+
+---
+
+## 💼 Business Recommendations
+
+Based on the analysis:
+
+- **Revenue Optimization:** Focus on the Bikes category, which generates the majority of revenue.
+- **Product Strategy:** Prioritize high-revenue products for inventory and marketing decisions.
+- **Market Expansion:** Evaluate growth opportunities in the US and Australian markets.
+- **Customer Retention:** Investigate strategies to encourage one-time customers to purchase again.
+- **Sales Strategy:** Track both sales volume and revenue to understand actual product performance.
+- **Data Reliability:** Address missing values before using customer and product attributes in business reporting.
+
+---
+
+## 👩‍💻 About the Analyst
+
+I am passionate about Data Analytics, SQL, and Business Intelligence.
+
+I enjoy exploring complex datasets, solving analytical problems, identifying hidden patterns, and translating data into meaningful business insights.
+
+Through this project, I demonstrate my ability to approach data analytically, use SQL to answer business questions, and communicate findings in a business-oriented way.
+
+**Open to Data Analyst and Business Intelligence opportunities.**
+
+🔗 GitHub: [@analytical-shruti](https://github.com/analytical-shruti)
+
+---
+
+<div align="center">
+
+### ⭐ If you find this project interesting, consider giving it a star!
+
+**Turning Data into Insights. Turning Insights into Decisions.**
+
+</div>
